@@ -361,7 +361,7 @@ xcorechanger() {
       8)  clear; install_single_binary "https://github.com/NiL070/XrayCoreChanger/releases/download/Xray-CoreMod_v1.7.2-1/Xray-linux-64-v1.7.2-1"; press_enter ;;
       9)  clear; install_single_binary "https://github.com/howitzer07/xraycore/releases/download/v24.11.30/xray-v24.11.30"; press_enter ;;
       10) clear; install_single_binary "https://github.com/howitzer07/xraycore/releases/download/v25.10.15/xray-linux-amd64"; press_enter ;;
-      11) clear; install_single_binary "https://github.com/RedHawk70/xraycore/releases/download/xrmodv26.2.4-1/Xray-linux-64-v26.2.4-1"; press_enter ;;	  
+      11) clear; install_single_binary "https://github.com/RedHawk70/xraycore/releases/download/xrmodv26.2.6-1/Xray-linux-64-v26.2.6-1"; press_enter ;;	  
 
       12)
         clear
