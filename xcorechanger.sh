@@ -105,7 +105,6 @@ box_fixed() {
   cols="$(term_cols)"
   w="$BOX_W"
 
-  # auto-fit ikut terminal (tinggal margin kiri/kanan)
   if (( cols > 0 && cols - 4 < w )); then
     w=$((cols - 4))
   fi
@@ -120,7 +119,6 @@ box_fixed() {
   padL=$(( (w - len) / 2 ))
   padR=$(( w - len - padL ))
 
-  # ASCII border: paling compatible
   printf "%b\n" "${C_CYAN}+$(repeat_char "$w" "=")+${RESET}"
   printf "%b\n" "${C_CYAN}|${RESET}$(repeat_char "$padL" " ")${BOLD}${C_WHITE}${t}${RESET}$(repeat_char "$padR" " ")${C_CYAN}|${RESET}"
   printf "%b\n" "${C_CYAN}+$(repeat_char "$w" "=")+${RESET}"
@@ -143,6 +141,7 @@ spinner_start() {
   ) &
   _spinner_pid=$!
 }
+
 spinner_stop() {
   if [[ -n "${_spinner_pid}" ]]; then
     kill "${_spinner_pid}" >/dev/null 2>&1 || true
@@ -151,9 +150,9 @@ spinner_stop() {
     printf "\b \n"
   fi
 }
+
 cleanup() { spinner_stop; }
 
-# Ctrl+C exit properly
 trap 'cleanup; echo; printf "%b\n" "${C_YELLOW}${BOLD}Exit...${RESET}"; exit 130' INT
 trap 'cleanup; exit 143' TERM
 trap 'cleanup' EXIT
@@ -195,10 +194,14 @@ refresh_latest_version() {
   latest_version="(unknown)"
   if need_cmd curl; then
     latest_version="$(curl -s https://api.github.com/repos/XTLS/Xray-core/releases \
-      | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
+      | grep -o '"tag_name"[[:space:]]*:[[:space:]]*"v[^"]*"' \
+      | head -n 1 \
+      | sed -E 's/.*"v([^"]+)".*/\1/')"
   elif need_cmd wget; then
     latest_version="$(wget -qO- https://api.github.com/repos/XTLS/Xray-core/releases \
-      | grep tag_name | sed -E 's/.*"v(.*)".*/\1/' | head -n 1)"
+      | grep -o '"tag_name"[[:space:]]*:[[:space:]]*"v[^"]*"' \
+      | head -n 1 \
+      | sed -E 's/.*"v([^"]+)".*/\1/')"
   fi
   [[ -z "$latest_version" ]] && latest_version="(unknown)"
 }
@@ -242,7 +245,7 @@ install_single_binary() {
   spinner_stop
 
   chmod 755 "$xrays_path" || true
-  ok "Installed: ${url}"
+  ok "Successfully Installed"
   "$xrays_path" version 2>/dev/null || "$xrays_path" --version 2>/dev/null || true
 }
 
@@ -283,7 +286,7 @@ install_latest_zip() {
     chmod 755 "$xrays_path" || true
     spinner_stop
     rm -rf "$tmp"
-    ok "Installed latest Xray-core v${ver}"
+    ok "Successfully Installed"
     "$xrays_path" version 2>/dev/null || "$xrays_path" --version 2>/dev/null || true
   else
     spinner_stop
@@ -361,7 +364,7 @@ xcorechanger() {
       8)  clear; install_single_binary "https://github.com/NiL070/XrayCoreChanger/releases/download/Xray-CoreMod_v1.7.2-1/Xray-linux-64-v1.7.2-1"; press_enter ;;
       9)  clear; install_single_binary "https://github.com/howitzer07/xraycore/releases/download/v24.11.30/xray-v24.11.30"; press_enter ;;
       10) clear; install_single_binary "https://github.com/howitzer07/xraycore/releases/download/v25.10.15/xray-linux-amd64"; press_enter ;;
-      11) clear; install_single_binary "https://github.com/RedHawk70/xraycore/releases/download/xrmodv26.2.6-1/Xray-linux-64-v26.2.6-1"; press_enter ;;	  
+      11) clear; install_single_binary "https://github.com/RedHawk70/xraycore/releases/download/xrmodv26.2.6-1/Xray-linux-64-v26.2.6-1"; press_enter ;;
 
       12)
         clear
